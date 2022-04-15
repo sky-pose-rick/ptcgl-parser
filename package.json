@@ -2,9 +2,9 @@
   "name": "@sky-pose-rick/ptcgl-parser",
   "version": "0.1.0",
   "description": "A decklist parser for Pokemon TCG Live based on https://github.com/Hamatti/ptcgo-parser",
-  "main": "index.js",
+  "main": "ptcgoParser.js",
   "scripts": {
-    "test": "exit 0"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,10 @@
   },
   "homepage": "https://github.com/sky-pose-rick/ptcgl-parser#readme",
   "publishConfig": {
-   "@sky-pose-rick:registry": "https://npm.pkg.github.com"
- }
+    "@sky-pose-rick:registry": "https://npm.pkg.github.com"
+  },
+  "dependencies": {
+    "jest": "^27.5.1"
+  },
+  "type": "module"
 }

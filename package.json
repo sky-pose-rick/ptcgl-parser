@@ -1,0 +1,24 @@
+{
+  "name": "@sky-pose-rick/ptcgl-parser",
+  "version": "0.1.0",
+  "description": "A decklist parser for Pokemon TCG Live based on https://github.com/Hamatti/ptcgo-parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sky-pose-rick/ptcgl-parser.git"
+  },
+  "keywords": [
+    "ptcgo",
+    "ptcgl",
+    "pokemon"
+  ],
+  "author": "Richard Cranwell rickycranwell@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sky-pose-rick/ptcgl-parser/issues"
+  },
+  "homepage": "https://github.com/sky-pose-rick/ptcgl-parser#readme"
+}

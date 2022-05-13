@@ -173,3 +173,22 @@ describe('subset numbering', () => {
     others?
   */
 });
+
+describe('detecting valid cards from future sets', ()=>{
+  it('an existing card', () => {
+    const row = '1 Wally GEN RC27';
+    const card = PTCGOParser.parseRow(row);
+    
+    console.log(card.ptcgoio);
+    expect(card.ptcgoio.missing).toBeFalsy();
+  });
+
+  it('an unused ptcgo code', () => {
+    const row = '1 Future Card ABC 123';
+    const card = PTCGOParser.parseRow(row);
+    
+    console.log(card.ptcgoio);
+    expect(card.ptcgoio.missing).toBeTruthy();
+  });
+});
+

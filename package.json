@@ -1,6 +1,6 @@
 {
   "name": "@sky-pose-rick/ptcgl-parser",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A decklist parser for Pokemon TCG Live based on https://github.com/Hamatti/ptcgo-parser",
   "main": "ptcgoParser.js",
   "scripts": {

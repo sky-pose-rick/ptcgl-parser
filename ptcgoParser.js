@@ -93,30 +93,41 @@ const parseRow = (row) => {
       name, set, code, isEnergy,
     } = card;
 
-    let idCode = null;
-    const promoCode = setcodes.promoSets[set];
-    if (isEnergy) {
-      idCode = `${BASIC_ENERGY_IDS[name]}`;
-    } else if (promoCode) {
-      // special case for SWSH promo numbering
-      if (promoCode === 'swshp-SWSH') {
-        if (code < 10) {
-          idCode = `${promoCode}00${code}`;
-        } else if (code < 100) {
-          idCode = `${promoCode}0${code}`;
+    const regularSet = setcodes.regularSets[set];
+    if(regularSet){
+      let idCode = null;
+      const promoCode = setcodes.promoSets[set];
+      if (isEnergy) {
+        idCode = `${BASIC_ENERGY_IDS[name]}`;
+      } else if (promoCode) {
+        // special case for SWSH promo numbering
+        if (promoCode === 'swshp-SWSH') {
+          if (code < 10) {
+            idCode = `${promoCode}00${code}`;
+          } else if (code < 100) {
+            idCode = `${promoCode}0${code}`;
+          } else {
+            idCode = `${promoCode}${code}`;
+          }
         } else {
           idCode = `${promoCode}${code}`;
         }
       } else {
-        idCode = `${promoCode}${code}`;
+        idCode = `${regularSet}-${code}`;
       }
-    } else {
-      idCode = `${setcodes.regularSets[set]}-${code}`;
+      card.ptcgoio = {
+        id: idCode,
+      };
     }
+    else{
+      card.ptcgoio = {
+        id: 'undefined',
+        missing: true,
+      }
+    }
+    
 
-    card.ptcgoio = {
-      id: idCode,
-    };
+    
     return card;
   }
   return null;

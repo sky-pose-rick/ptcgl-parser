@@ -115,7 +115,7 @@ const parseRow = (row) => {
   const card = detectCard(row);
   if (card) {
     const {
-      name, set, code, isEnergy,
+     set, code,
     } = card;
 
     // basic energy
@@ -124,14 +124,16 @@ const parseRow = (row) => {
       const energyIndex = (card.code - 1) % 9;
       card.energyType = BASIC_ENERGY_FROM_NUMBERS[energyIndex];
 
-      card.ptcgoio = card.ptcgoio = {
+      card.ptcgAPI = card.ptcgoio = {
         id: BASIC_ENERGY_IDS[card.energyType],
       };
 
+      // ptcgoio naming will be removed in the future
+      card.ptcgoio = {...card.ptcgAPI};
       return card;
     }
 
-    card.ptcgoio = {
+    card.ptcgAPI = {
       id: 'undefined',
     };
     const regularSet = setcodes.regularSets[set];
@@ -141,24 +143,25 @@ const parseRow = (row) => {
         // special case for SWSH promo numbering
         if (promoCode === 'swshp-SWSH') {
           if (code < 10) {
-            card.ptcgoio.id = `${promoCode}00${code}`;
+            card.ptcgAPI.id = `${promoCode}00${code}`;
           } else if (code < 100) {
-            card.ptcgoio.id = `${promoCode}0${code}`;
+            card.ptcgAPI.id = `${promoCode}0${code}`;
           } else {
-            card.ptcgoio.id = `${promoCode}${code}`;
+            card.ptcgAPI.id = `${promoCode}${code}`;
           }
         } else {
-          card.ptcgoio.id = `${promoCode}${code}`;
+          card.ptcgAPI.id = `${promoCode}${code}`;
         }
       } else {
-        card.ptcgoio.id = `${regularSet}-${code}`;
+        card.ptcgAPI.id = `${regularSet}-${code}`;
       }
     }
     else{
-      card.ptcgoio.missing = true;
+      card.ptcgAPI.missing = true;
     }
     
-
+    // the name ptcgoio is easy to mistype so it will be replaced completely in the future
+    card.ptcgoio = {...card.ptcgAPI};
     
     return card;
   }

@@ -1,6 +1,6 @@
 import PTCGOParser from './ptcgoParser.js';
 
-describe('test basic energy cards', () => {
+describe('find basic energy by card name', () => {
   it('7 Metal Energy BRS M', () => {
     const row = '7 Metal Energy BRS M';
     const card = PTCGOParser.parseRow(row);
@@ -71,6 +71,26 @@ describe('test basic energy cards', () => {
 
     expect(card.amount).toMatch(/12/);
     expect(card.name).toMatch(/water/i);
+  });
+});
+
+describe('find basic energy by set code', ()=>{
+  it('4 Basic Flame Energy Energy 2', () => {
+    const row = '4 Basic Flame Energy Energy 2';
+    const card = PTCGOParser.parseRow(row);
+
+    expect(card.name).toMatch(/basic flame energy/i);
+    expect(card.isEnergy).toBeTruthy();
+    expect(card.ptcgoio.id).toEqual('sm1-165');
+  });
+
+  it('4 Steel Energy 8', () => {
+    const row = '4 Steel Energy 8';
+    const card = PTCGOParser.parseRow(row);
+
+    expect(card.name).toMatch(/steel/i);
+    expect(card.isEnergy).toBeTruthy();
+    expect(card.ptcgoio.id).toEqual('sm1-171');
   });
 });
 
@@ -179,7 +199,6 @@ describe('detecting valid cards from future sets', ()=>{
     const row = '1 Wally GEN RC27';
     const card = PTCGOParser.parseRow(row);
     
-    console.log(card.ptcgoio);
     expect(card.ptcgoio.missing).toBeFalsy();
   });
 
@@ -187,7 +206,6 @@ describe('detecting valid cards from future sets', ()=>{
     const row = '1 Future Card ABC 123';
     const card = PTCGOParser.parseRow(row);
     
-    console.log(card.ptcgoio);
     expect(card.ptcgoio.missing).toBeTruthy();
   });
 });

@@ -1,7 +1,7 @@
 // copied from https://github.com/Hamatti/ptcgo-parser
 import setcodes from './sets.js';
 
-const SET_PATTERN = /(?:\*)?(\d+) (.*) ([A-Z]{2,3}|[A-Z]{2}-[A-Z]{2,4}|[A-Z0-9]{3})? (\d+|XY\d+|BW\d+|SM\d+|SWSH\d+|RC\d+|TG\d+)/;
+const SET_PATTERN = /(?:\*)?(\d+) (.*) ([A-Z]{2,3}|[A-Z]{2}-[A-Z]{2,4}|[A-Z0-9]{3}|Energy)? (\d+|XY\d+|BW\d+|SM\d+|SWSH\d+|RC\d+|TG\d+)/;
 const BASIC_ENERGY_COUNT_PATTERN = /(?:\*)?\d+/;
 
 const BASIC_ENERGY_TYPES = [
@@ -52,6 +52,30 @@ const BASIC_ENERGY_IDS = {
   Water: 'sm1-166',
 };
 
+const BASIC_ENERGY_NUMBERS = {
+  Darkness: '7',
+  Fairy: '17',
+  Fighting: '6',
+  Fire: '2',
+  Grass: '1',
+  Lightning: '4',
+  Metal: '8',
+  Psychic: '5',
+  Water: '3',
+};
+
+const BASIC_ENERGY_FROM_NUMBERS=[
+  'Grass',
+  'Fire',
+  'Water',
+  'Lightning',
+  'Psychic',
+  'Fighting',
+  'Darkness',
+  'Metal',
+  'Fairy',
+]
+
 const detectBasicEnergy = (row) => {
   const result = BASIC_ENERGY_TYPES.findIndex((energy, index) => (row.includes(`${energy} Energy`)
     || row.includes(`Basic ${PTCGL_BASIC_ENERGY[index]} Energy`)));
@@ -71,7 +95,8 @@ const detectCard = (row) => {
     return {
       amount: energyCount,
       name: basicEnergyType,
-      isEnergy: true,
+      set: 'Energy',
+      code: BASIC_ENERGY_NUMBERS[basicEnergyType],
     };
   }
   const result = row.match(SET_PATTERN);
@@ -93,37 +118,44 @@ const parseRow = (row) => {
       name, set, code, isEnergy,
     } = card;
 
+    // basic energy
+    if(set === 'Energy'){
+      card.isEnergy = true;
+      const energyIndex = (card.code - 1) % 9;
+      card.energyType = BASIC_ENERGY_FROM_NUMBERS[energyIndex];
+
+      card.ptcgoio = card.ptcgoio = {
+        id: BASIC_ENERGY_IDS[card.energyType],
+      };
+
+      return card;
+    }
+
+    card.ptcgoio = {
+      id: 'undefined',
+    };
     const regularSet = setcodes.regularSets[set];
     if(regularSet){
-      let idCode = null;
       const promoCode = setcodes.promoSets[set];
-      if (isEnergy) {
-        idCode = `${BASIC_ENERGY_IDS[name]}`;
-      } else if (promoCode) {
+      if (promoCode) {
         // special case for SWSH promo numbering
         if (promoCode === 'swshp-SWSH') {
           if (code < 10) {
-            idCode = `${promoCode}00${code}`;
+            card.ptcgoio.id = `${promoCode}00${code}`;
           } else if (code < 100) {
-            idCode = `${promoCode}0${code}`;
+            card.ptcgoio.id = `${promoCode}0${code}`;
           } else {
-            idCode = `${promoCode}${code}`;
+            card.ptcgoio.id = `${promoCode}${code}`;
           }
         } else {
-          idCode = `${promoCode}${code}`;
+          card.ptcgoio.id = `${promoCode}${code}`;
         }
       } else {
-        idCode = `${regularSet}-${code}`;
+        card.ptcgoio.id = `${regularSet}-${code}`;
       }
-      card.ptcgoio = {
-        id: idCode,
-      };
     }
     else{
-      card.ptcgoio = {
-        id: 'undefined',
-        missing: true,
-      }
+      card.ptcgoio.missing = true;
     }
     
 

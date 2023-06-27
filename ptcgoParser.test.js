@@ -175,6 +175,20 @@ describe('promo cards', () => {
 
     expect(card.ptcgoio.id).toMatch(/swshp-SWSH154/i);
   });
+
+  it('2 Chespin XYP 1', () =>{
+    const row = '2 Chespin XYP 1';
+    const card = PTCGOParser.parseRow(row);
+
+    expect(card.ptcgoio.id).toMatch(/xyp-XY01/i);
+  });
+
+  it('2 Sprigatito PR-SV 1', () =>{
+    const row = '2 Sprigatito PR-SV 1';
+    const card = PTCGOParser.parseRow(row);
+
+    expect(card.ptcgoio.id).toMatch(/svp-1/i);
+  });
 });
 
 describe('subset numbering', () => {
@@ -207,6 +221,24 @@ describe('detecting valid cards from future sets', ()=>{
     const card = PTCGOParser.parseRow(row);
     
     expect(card.ptcgoio.missing).toBeTruthy();
+  });
+});
+
+describe('ptcgl alt sets', () => {
+  it('bw alt', () =>{
+    const row = '3 Serperior BWALT 1';
+    const card = PTCGOParser.parseRow(row);
+
+    expect(card.amount).toMatch(/3/);
+    expect(card.name).toMatch(/Serperior/i);
+  });
+
+  it('swsh alt', () =>{
+    const row = '2 FakeMon SWSHALT 1';
+    const card = PTCGOParser.parseRow(row);
+
+    expect(card.amount).toMatch(/2/);
+    expect(card.name).toMatch(/FakeMon/i);
   });
 });
 

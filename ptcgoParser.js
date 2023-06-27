@@ -1,7 +1,7 @@
 // copied from https://github.com/Hamatti/ptcgo-parser
 import setcodes from './sets.js';
 
-const SET_PATTERN = /(?:\*)?(\d+) (.*) ([A-Z]{2,3}|[A-Z]{2}-[A-Z]{2,4}|[A-Z0-9]{3}|Energy)? (\d+|XY\d+|BW\d+|SM\d+|SWSH\d+|RC\d+|TG\d+)/;
+const SET_PATTERN = /(?:\*)?(\d+) (.*) ([A-Z]{2,3}|[A-Z]{2}-[A-Z]{2,4}|[A-Z0-9]{3}|[A-Z]{2,4}ALT|Energy)? (\d+|XY\d+|BW\d+|SM\d+|SWSH\d+|RC\d+|TG\d+)/;
 const BASIC_ENERGY_COUNT_PATTERN = /(?:\*)?\d+/;
 
 const BASIC_ENERGY_TYPES = [
@@ -150,7 +150,13 @@ const parseRow = (row) => {
             card.ptcgAPI.id = `${promoCode}${code}`;
           }
         } else {
-          card.ptcgAPI.id = `${promoCode}${code}`;
+          // BW,XY,SM promos
+          if(code < 10 && promoCode !== 'svp-'){
+            card.ptcgAPI.id = `${promoCode}0${code}`;
+          }
+          else{
+            card.ptcgAPI.id = `${promoCode}${code}`;
+          }
         }
       } else {
         card.ptcgAPI.id = `${regularSet}-${code}`;
